@@ -14,6 +14,7 @@ import com.elma.braingames.managers.SaveManager;
 
 import com.elma.braingames.puzzles.BasePuzzleScreen;
 
+import com.elma.braingames.puzzles.hanoi.HanoiPuzzleScreen;
 import com.elma.braingames.puzzles.numbersequence.input.NumberSequenceInputHandler;
 import com.elma.braingames.puzzles.numbersequence.layout.NumberSequenceLayout;
 import com.elma.braingames.puzzles.numbersequence.manager.NumberSequenceGameManager;
@@ -126,7 +127,7 @@ public class NumberSequencePuzzleScreen
                 //next
                 () ->
                     game.setScreen(
-                        new LevelSelectScreen(
+                        new HanoiPuzzleScreen(
                             game
                         )
                     )

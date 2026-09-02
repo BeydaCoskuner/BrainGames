@@ -6,6 +6,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.elma.braingames.puzzles.colormatch.ColorMatchPuzzleScreen;
 import com.elma.braingames.utils.GameConfig;
 import com.elma.braingames.BrainGames;
 import com.elma.braingames.input.VictoryOverlayInput;
@@ -117,7 +118,7 @@ public class TangramPuzzleScreen
                 //next
                 () ->
                     game.setScreen(
-                        new LevelSelectScreen(
+                        new ColorMatchPuzzleScreen(
                             game
                         )
                     )

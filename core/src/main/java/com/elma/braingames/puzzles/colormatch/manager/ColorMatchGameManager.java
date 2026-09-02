@@ -8,75 +8,28 @@ import com.elma.braingames.puzzles.colormatch.models.ColorCircle;
 
 public class ColorMatchGameManager {
 
-    /*
-     * Oyundaki bütün daireler
-     */
     private final Array<ColorCircle> circles;
 
-
-    /*
-     * Tamamlanmış çizgiler
-     */
     private final Array<ColorLine> completedLines;
 
-
-    /*
-     * Aktif olarak çizilen yol
-     */
     private Array<Vector2> activeLinePoints;
 
-
-    /*
-     * Aktif çizginin başladığı daire
-     */
     private ColorCircle activeStartCircle;
 
-
-    /*
-     * Aktif çizginin rengi
-     */
     private Color activeColor;
 
-
-    /*
-     * Kullanıcı şu anda çiziyor mu?
-     */
     private boolean drawing;
 
-
-    /*
-     * Oyun başarısız oldu mu?
-     */
     private boolean gameFailed;
 
-
-    /*
-     * Oyun tamamlandı mı?
-     */
     private boolean gameCompleted;
 
-
-    /*
-     * Kaç bağlantı tamamlandı?
-     */
     private int completedConnectionCount;
 
-
-    /*
-     * Toplam bağlantı sayısı
-     */
     private static final int TOTAL_CONNECTIONS = 3;
 
-
-    /*
-     * Daire yarıçapı
-     */
     private static final float CIRCLE_RADIUS = 85f;
 
-
-    /*
-     * Çizginin kesişme toleransı
-     */
     private static final float INTERSECTION_EPSILON = 1f;
 
 
@@ -111,12 +64,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * DAİRELERİ OLUŞTUR
-     * =========================================================
-     */
-
     public void createCircles(
         float worldWidth,
         float worldHeight
@@ -141,23 +88,12 @@ public class ColorMatchGameManager {
         completedConnectionCount = 0;
 
 
-        /*
-         * SOL TARAF
-         */
         float leftX =
             worldWidth * 0.22f;
 
-
-        /*
-         * SAĞ TARAF
-         */
         float rightX =
             worldWidth * 0.78f;
 
-
-        /*
-         * DİKEY KONUMlar
-         */
         float topY =
             worldHeight * 0.70f;
 
@@ -271,12 +207,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * ÇİZGİ BAŞLATILABİLİR Mİ?
-     * =========================================================
-     */
-
     public boolean canStartLine(
         ColorCircle circle
     ) {
@@ -305,10 +235,6 @@ public class ColorMatchGameManager {
         }
 
 
-        /*
-         * Bu dairenin bağlantısı daha önce
-         * tamamlanmışsa tekrar başlanamaz.
-         */
         if (isCircleAlreadyConnected(
             circle
         )) {
@@ -320,12 +246,6 @@ public class ColorMatchGameManager {
         return true;
     }
 
-
-    /*
-     * =========================================================
-     * ÇİZGİYİ BAŞLAT
-     * =========================================================
-     */
 
     public void startLine(
         ColorCircle circle
@@ -362,11 +282,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * AKTİF ÇİZGİ NOKTALARINI AYARLA
-     * =========================================================
-     */
 
     public void setActiveLinePoints(
         Array<Vector2> points
@@ -388,24 +303,10 @@ public class ColorMatchGameManager {
             points;
     }
 
-
-    /*
-     * =========================================================
-     * AKTİF ÇİZGİ NOKTALARINI TEMİZLE
-     * =========================================================
-     */
-
     public void clearActiveLinePoints() {
 
         activeLinePoints.clear();
     }
-
-
-    /*
-     * =========================================================
-     * AKTİF ÇİZGİYİ TAMAMLA
-     * =========================================================
-     */
 
     public void finishLine(
         ColorCircle targetCircle
@@ -416,10 +317,6 @@ public class ColorMatchGameManager {
             return;
         }
 
-
-        /*
-         * Başlangıç dairesi yoksa iptal
-         */
         if (activeStartCircle == null) {
 
             cancelActiveLine();
@@ -427,10 +324,6 @@ public class ColorMatchGameManager {
             return;
         }
 
-
-        /*
-         * Hedef daire yoksa iptal
-         */
         if (targetCircle == null) {
 
             cancelActiveLine();
@@ -438,11 +331,6 @@ public class ColorMatchGameManager {
             return;
         }
 
-
-        /*
-         * Aynı daireye geri dönüldüyse
-         * bağlantı geçersiz.
-         */
         if (
             targetCircle ==
                 activeStartCircle
@@ -453,11 +341,6 @@ public class ColorMatchGameManager {
             return;
         }
 
-
-        /*
-         * Hedef dairenin rengi
-         * başlangıç rengiyle aynı olmalı.
-         */
         if (
             !sameColor(
                 activeStartCircle.getColor(),
@@ -470,11 +353,6 @@ public class ColorMatchGameManager {
             return;
         }
 
-
-        /*
-         * Hedef daire daha önce
-         * kullanılmışsa bağlantı geçersiz.
-         */
         if (isCircleAlreadyConnected(
             targetCircle
         )) {
@@ -484,11 +362,6 @@ public class ColorMatchGameManager {
             return;
         }
 
-
-        /*
-         * Yolun son noktasını hedef dairenin
-         * merkezine ekliyoruz.
-         */
         activeLinePoints.add(
             new Vector2(
                 targetCircle.getX(),
@@ -496,10 +369,6 @@ public class ColorMatchGameManager {
             )
         );
 
-
-        /*
-         * Yeni çizgiyi oluştur.
-         */
         ColorLine newLine =
             new ColorLine(
                 activeStartCircle,
@@ -510,11 +379,6 @@ public class ColorMatchGameManager {
                 )
             );
 
-
-        /*
-         * Yeni çizginin mevcut çizgilerle
-         * kesişip kesişmediğini kontrol et.
-         */
         if (doesLineIntersectExistingLines(
             newLine
         )) {
@@ -526,10 +390,6 @@ public class ColorMatchGameManager {
             return;
         }
 
-
-        /*
-         * Çizgiyi kaydet.
-         */
         completedLines.add(
             newLine
         );
@@ -537,17 +397,9 @@ public class ColorMatchGameManager {
 
         completedConnectionCount++;
 
-
-        /*
-         * Aktif çizimi temizle.
-         */
         cancelActiveLine();
 
 
-        /*
-         * Üç bağlantı tamamlandıysa
-         * oyun bitmiştir.
-         */
         if (
             completedConnectionCount
                 >= TOTAL_CONNECTIONS
@@ -557,12 +409,6 @@ public class ColorMatchGameManager {
         }
     }
 
-
-    /*
-     * =========================================================
-     * GEÇİCİ ÇİZGİYİ İPTAL ET
-     * =========================================================
-     */
 
     private void cancelActiveLine() {
 
@@ -576,11 +422,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * DAİRE DAHA ÖNCE BAĞLANDI MI?
-     * =========================================================
-     */
 
     private boolean isCircleAlreadyConnected(
         ColorCircle circle
@@ -613,12 +454,6 @@ public class ColorMatchGameManager {
         return false;
     }
 
-
-    /*
-     * =========================================================
-     * RENK KARŞILAŞTIR
-     * =========================================================
-     */
 
     private boolean sameColor(
         Color color1,
@@ -653,11 +488,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * YENİ ÇİZGİ MEVCUT ÇİZGİLERLE KESİŞİYOR MU?
-     * =========================================================
-     */
 
     private boolean doesLineIntersectExistingLines(
         ColorLine newLine
@@ -683,13 +513,6 @@ public class ColorMatchGameManager {
         return false;
     }
 
-
-    /*
-     * =========================================================
-     * İKİ YOLUN KESİŞİM KONTROLÜ
-     * =========================================================
-     */
-
     private boolean linesIntersect(
         Array<Vector2> lineA,
         Array<Vector2> lineB
@@ -712,10 +535,6 @@ public class ColorMatchGameManager {
             return false;
         }
 
-
-        /*
-         * Birinci çizginin bütün parçaları
-         */
         for (
             int i = 0;
             i < lineA.size - 1;
@@ -729,9 +548,6 @@ public class ColorMatchGameManager {
                 lineA.get(i + 1);
 
 
-            /*
-             * İkinci çizginin bütün parçaları
-             */
             for (
                 int j = 0;
                 j < lineB.size - 1;
@@ -763,12 +579,6 @@ public class ColorMatchGameManager {
         return false;
     }
 
-
-    /*
-     * =========================================================
-     * İKİ DOĞRU PARÇASI KESİŞİYOR MU?
-     * =========================================================
-     */
 
     private boolean segmentsIntersect(
         Vector2 p1,
@@ -806,9 +616,6 @@ public class ColorMatchGameManager {
             );
 
 
-        /*
-         * Normal kesişme
-         */
         if (
             ((o1 > 0 && o2 < 0)
                 || (o1 < 0 && o2 > 0))
@@ -823,9 +630,6 @@ public class ColorMatchGameManager {
         }
 
 
-        /*
-         * Aynı doğru üzerinde özel durumlar
-         */
         if (
             Math.abs(o1)
                 < INTERSECTION_EPSILON
@@ -890,11 +694,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * ORIENTATION
-     * =========================================================
-     */
 
     private float orientation(
         Vector2 a,
@@ -913,11 +712,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * NOKTA DOĞRU PARÇASI ÜZERİNDE Mİ?
-     * =========================================================
-     */
 
     private boolean onSegment(
         Vector2 a,
@@ -958,11 +752,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * NOKTALARI KOPYALA
-     * =========================================================
-     */
 
     private Array<Vector2> copyPoints(
         Array<Vector2> source
@@ -990,11 +779,6 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * RESET
-     * =========================================================
-     */
 
     public void resetGame() {
 
@@ -1015,13 +799,6 @@ public class ColorMatchGameManager {
         completedConnectionCount = 0;
     }
 
-
-    /*
-     * =========================================================
-     * GAME FAILED
-     * =========================================================
-     */
-
     public boolean isGameFailed() {
 
         return gameFailed;
@@ -1034,35 +811,16 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * GAME COMPLETED
-     * =========================================================
-     */
-
     public boolean isGameCompleted() {
 
         return gameCompleted;
     }
 
 
-    /*
-     * =========================================================
-     * DRAWING
-     * =========================================================
-     */
-
     public boolean isDrawing() {
 
         return drawing;
     }
-
-
-    /*
-     * =========================================================
-     * ACTIVE LINE POINTS
-     * =========================================================
-     */
 
     public Array<Vector2> getActiveLinePoints() {
 
@@ -1070,23 +828,11 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * ACTIVE COLOR
-     * =========================================================
-     */
-
     public Color getActiveColor() {
 
         return activeColor;
     }
 
-
-    /*
-     * =========================================================
-     * CIRCLES
-     * =========================================================
-     */
 
     public Array<ColorCircle> getCircles() {
 
@@ -1094,35 +840,17 @@ public class ColorMatchGameManager {
     }
 
 
-    /*
-     * =========================================================
-     * COMPLETED LINES
-     * =========================================================
-     */
-
     public Array<ColorLine> getCompletedLines() {
 
         return completedLines;
     }
 
 
-    /*
-     * =========================================================
-     * COMPLETED CONNECTION COUNT
-     * =========================================================
-     */
-
     public int getCompletedConnectionCount() {
 
         return completedConnectionCount;
     }
 
-
-    /*
-     * =========================================================
-     * COLOR LINE
-     * =========================================================
-     */
 
     public static class ColorLine {
 
